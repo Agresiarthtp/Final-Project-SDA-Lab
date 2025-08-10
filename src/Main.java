@@ -7,6 +7,27 @@ public class Main {
         GraphRelasiMahasiswa graph = new GraphRelasiMahasiswa();
 
         Scanner sc = new Scanner(System.in);
+
+        System.out.println("Menambahkan data awal ke database...");
+        Mahasiswa[] daftarAwal = {
+                new Mahasiswa("202411001", "Putu Bagus", 3.85),
+                new Mahasiswa("202411002", "Indra Dermawan", 3.92),
+                new Mahasiswa("202411003", "Agresia Retha", 3.50),
+                new Mahasiswa("202411004", "Fadli Kurniawan", 3.75),
+                new Mahasiswa("202411005", "Lutfi Zaelani", 3.20),
+                new Mahasiswa("202411006", "Retha Agresia", 3.98),
+                new Mahasiswa("202411007", "Zaelani Lutfi", 2.90),
+                new Mahasiswa("202411008", "Fadli Dermawan", 3.45),
+                new Mahasiswa("202411009", "Putu Tria", 3.60),
+                new Mahasiswa("202411010", "Bagus Indra", 3.15)
+        };
+
+        for (Mahasiswa mhs : daftarAwal) {
+            hashTable.tambahMahasiswa(mhs);
+            bst.insert(mhs);
+            graph.tambahMahasiswa(mhs.getNim());
+        }
+
         int pilihan;
 
         do {
@@ -35,22 +56,43 @@ public class Main {
                     double ipk = sc.nextDouble();
                     sc.nextLine();
                     Mahasiswa mhs = new Mahasiswa(nim, nama, ipk);
+
+                    // Time Test
+                    long startTime = System.nanoTime();
                     hashTable.tambahMahasiswa(mhs);
                     bst.insert(mhs);
                     graph.tambahMahasiswa(nim);
+                    long endTime = System.nanoTime();
+                    double duration = (endTime - startTime) / 1_000_000.0;
+
                     System.out.println("Mahasiswa berhasil ditambahkan.");
+                    System.out.printf("Waktu eksekusi penambahan: %.4f milidetik.\n", duration);
                     break;
                 case 2:
                     System.out.print("Masukkan NIM: ");
                     String cariNim = sc.nextLine();
+
+                    //Time test
+                    long startTimeHash = System.nanoTime();
                     Mahasiswa hasil = hashTable.cariMahasiswa(cariNim);
+                    long endTimeHash = System.nanoTime();
+                    double durationHash = (endTimeHash - startTimeHash) / 1_000_000.0;
+
                     System.out.println((hasil != null) ? hasil : "Tidak ditemukan.");
+                    System.out.printf("Waktu eksekusi pencarian (HashTable): %.4f milidetik.\n", durationHash);
                     break;
                 case 3:
                     System.out.print("Masukkan Nama: ");
                     String cariNama = sc.nextLine();
+
+                    // Time test
+                    long startTimeBst = System.nanoTime();
                     Mahasiswa hasilNama = bst.searchByNama(cariNama);
+                    long endTimeBst = System.nanoTime();
+                    double durationBst = (endTimeBst - startTimeBst) / 1_000_000.0;
+
                     System.out.println((hasilNama != null) ? hasilNama : "Tidak ditemukan.");
+                    System.out.printf("Waktu eksekusi pencarian (BST): %.4f milidetik.\n", durationBst);
                     break;
                 case 4:
                     System.out.print("NIM Mahasiswa 1: ");
@@ -68,7 +110,13 @@ public class Main {
                     hashTable.tampilkanSemua();
                     break;
                 case 6:
+                    // Time test
+                    long startTimeTraversal = System.nanoTime();
                     bst.inorderTraversal();
+                    long endTimeTraversal = System.nanoTime();
+                    double durationTraversal = (endTimeTraversal - startTimeTraversal) / 1_000_000.0;
+
+                    System.out.printf("\nWaktu eksekusi inorder traversal (BST): %.4f milidetik.\n", durationTraversal);
                     break;
                 case 7:
                     graph.tampilkanRelasi();
